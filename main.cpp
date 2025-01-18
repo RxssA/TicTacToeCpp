@@ -2,25 +2,25 @@
 #include <ctime>
 
 void drawBoard(char *spaces);
-void playerMove(char *spaces, char player);
-void computerMove(char *spaces, char computer);
-bool checkWinner(char *spaces, char player);
+void playerMove(char *spaces, char playerMarker);
+void computerMove(char *spaces, char computerMarker);
+bool checkWinner(char *spaces, char playerMarker);
 bool checkTie(char *spaces);
 
 int main()
 {
     srand(time(0));
     char spaces[9] = {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
-    char player = 'X';
-    char computer = 'O';
+    char playerMarker = 'X';
+    char computerMarker = 'O';
     bool running = true;
 
     drawBoard(spaces);
 
     while(running){
-        playerMove(spaces, player);
+        playerMove(spaces, playerMarker);
         drawBoard(spaces);
-        if(checkWinner(spaces, player)){
+        if(checkWinner(spaces, playerMarker)){
             running = false;
             break;
         }
@@ -29,9 +29,9 @@ int main()
             break;
         }
 
-        computerMove(spaces, computer);
+        computerMove(spaces, computerMarker);
         drawBoard(spaces);
-        if(checkWinner(spaces, computer)){
+        if(checkWinner(spaces, computerMarker)){
             running = false;
             break;
         }
@@ -69,50 +69,36 @@ void playerMove(char *spaces, char player){
         }
     }while(!number > 0 || !number < 8);
 }
-void computerMove(char *spaces, char computer){
+void computerMove(char *spaces, char computerMarker){
     int number;
     
 
     while(true){
         number = rand() % 9;
         if(spaces[number] == ' '){
-            spaces[number] = computer;
+            spaces[number] = computerMarker;
             break;
         }
     }
 }
-bool checkWinner(char *spaces, char player){
+bool checkWinner(char *spaces, char playerMarker) {
+    int winningCombinations[8][3] = {
+        {0, 1, 2}, {3, 4, 5}, {6, 7, 8},  // Rows
+        {0, 3, 6}, {1, 4, 7}, {2, 5, 8},  // Columns
+        {0, 4, 8}, {2, 4, 6}              // Diagonals
+    };
 
-    if((spaces[0] != ' ') && (spaces[0] == spaces[1]) && (spaces[1] == spaces[2])){
-        spaces[0] == player ? std::cout << "YOU WIN!\n" : std::cout << "YOU LOSE!\n";
+    for (int i = 0; i < 8; i++) {
+        if (spaces[winningCombinations[i][0]] == playerMarker &&
+            spaces[winningCombinations[i][1]] == playerMarker &&
+            spaces[winningCombinations[i][2]] == playerMarker) {
+            std::cout << (playerMarker == 'X' ? "YOU WIN!\n" : "YOU LOSE!\n");
+            return true;
+        }
     }
-    else if((spaces[3] != ' ') && (spaces[3] == spaces[4]) && (spaces[4] == spaces[5])){
-        spaces[3] == player ? std::cout << "YOU WIN!\n" : std::cout << "YOU LOSE!\n";
-    }
-    else if((spaces[6] != ' ') && (spaces[6] == spaces[7]) && (spaces[7] == spaces[8])){
-        spaces[6] == player ? std::cout << "YOU WIN!\n" : std::cout << "YOU LOSE!\n";
-    }
-    else if((spaces[0] != ' ') && (spaces[0] == spaces[3]) && (spaces[3] == spaces[6])){
-        spaces[0] == player ? std::cout << "YOU WIN!\n" : std::cout << "YOU LOSE!\n";
-    }
-    else if((spaces[1] != ' ') && (spaces[1] == spaces[4]) && (spaces[4] == spaces[7])){
-        spaces[1] == player ? std::cout << "YOU WIN!\n" : std::cout << "YOU LOSE!\n";
-    }
-    else if((spaces[2] != ' ') && (spaces[2] == spaces[5]) && (spaces[5] == spaces[8])){
-        spaces[2] == player ? std::cout << "YOU WIN!\n" : std::cout << "YOU LOSE!\n";
-    }
-    else if((spaces[0] != ' ') && (spaces[0] == spaces[4]) && (spaces[4] == spaces[8])){
-        spaces[0] == player ? std::cout << "YOU WIN!\n" : std::cout << "YOU LOSE!\n";
-    }
-    else if((spaces[2] != ' ') && (spaces[2] == spaces[4]) && (spaces[4] == spaces[6])){
-        spaces[2] == player ? std::cout << "YOU WIN!\n" : std::cout << "YOU LOSE!\n";
-    }
-    else{
-        return false;
-    }
-
-    return true;
+    return false;
 }
+
 bool checkTie(char *spaces){
 
     for(int i = 0; i < 9; i++){
