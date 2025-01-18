@@ -9,6 +9,7 @@ bool checkTie(char *spaces);
 
 int main()
 {
+    srand(time(0));
     char spaces[9] = {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
     char player = 'X';
     char computer = 'O';
@@ -70,7 +71,7 @@ void playerMove(char *spaces, char player){
 }
 void computerMove(char *spaces, char computer){
     int number;
-    srand(time(0));
+    
 
     while(true){
         number = rand() % 9;
